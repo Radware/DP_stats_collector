@@ -1,0 +1,88 @@
+{
+    "aggregation": null,
+    "order": [
+        {
+            "type": "Order",
+            "order": "ASC",
+            "aggregationName": null,
+            "field": "timeStamp",
+            "sortingType": "LONG"
+        }
+    ],
+    "pagination": {
+        "page": 0,
+        "size": 10000,
+        "topHits": 1
+    },
+    "criteria": [
+        {
+            "type": "termFilter",
+            "field": "isIpv4",
+            "value": "true",
+            "inverseFilter": false
+        },
+        {
+            "type": "termFilter",
+            "field": "protection",
+            "value": "tcp-syn",
+            "inverseFilter": false
+        },
+        {
+            "type": "termFilter",
+            "field": "direction",
+            "value": "In",
+            "inverseFilter": false
+        },
+        {
+            "type": "termFilter",
+            "field": "units",
+            "value": "qps",
+            "inverseFilter": false
+        },
+        {
+            "type": "termFilter",
+            "field": "_type",
+            "value": "DnsBaseLineRate",
+            "inverseFilter": false
+        },
+        {
+            "type": "timeFilter",
+            "inverseFilter": false,
+            "field": "timeStamp",
+            "lower": "$lower epoch time based on DURATION setting in config.py",
+            "upper": null,
+            "includeLower": true,
+            "includeUpper": true
+        },
+        {
+            "type": "orFilter",
+            "inverseFilter": false,
+            "filters": [
+                {
+                    "type": "andFilter",
+                    "inverseFilter": false,
+                    "filters": [
+                        {
+                            "type": "termFilter",
+                            "inverseFilter": false,
+                            "field": "deviceIp",
+                            "value": "$DefensePro IP"
+                        },
+                        {
+                            "type": "orFilter",
+                            "inverseFilter": false,
+                            "filters": [
+                                {
+                                    "type": "termFilter",
+                                    "inverseFilter": false,
+                                    "field": "policyName",
+                                    "value": "$Policy name"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

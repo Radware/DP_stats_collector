@@ -1,0 +1,88 @@
+{
+    "aggregation": null,
+    "order": [
+        {
+            "type": "Order",
+            "order": "ASC",
+            "aggregationName": null,
+            "field": "timeStamp",
+            "sortingType": "LONG"
+        }
+    ],
+    "pagination": {
+        "page": 0,
+        "size": 10000,
+        "topHits": 1
+    },
+    "criteria": [
+        {
+            "type": "termFilter",
+            "field": "isIpv4",
+            "value": "true",
+            "inverseFilter": false
+        },
+        {
+            "type": "termFilter",
+            "field": "protection",
+            "value": "tcp-syn",
+            "inverseFilter": false
+        },
+        {
+            "type": "termFilter",
+            "field": "direction",
+            "value": "In",
+            "inverseFilter": false
+        },
+        {
+            "type": "termFilter",
+            "field": "units",
+            "value": "bps",
+            "inverseFilter": false
+        },
+        {
+            "type": "termFilter",
+            "field": "_type",
+            "value": "BDosBaseLineRate",
+            "inverseFilter": false
+        },
+        {
+            "type": "timeFilter",
+            "inverseFilter": false,
+            "field": "timeStamp",
+            "lower": 1607521793308,
+            "upper": null,
+            "includeLower": true,
+            "includeUpper": true
+        },
+        {
+            "type": "orFilter",
+            "inverseFilter": false,
+            "filters": [
+                {
+                    "type": "andFilter",
+                    "inverseFilter": false,
+                    "filters": [
+                        {
+                            "type": "termFilter",
+                            "inverseFilter": false,
+                            "field": "deviceIp",
+                            "value": "10.213.17.52"
+                        },
+                        {
+                            "type": "orFilter",
+                            "inverseFilter": false,
+                            "filters": [
+                                {
+                                    "type": "termFilter",
+                                    "inverseFilter": false,
+                                    "field": "policyName",
+                                    "value": "POC_Demo"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

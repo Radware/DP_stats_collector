@@ -1,0 +1,21 @@
+DURATION = 6 # sets the time frame in days for the data collection period
+
+VISION_IP = "1.1.1.1" # APSolute Vision IP
+VISION_USER = "radware" # APSolute Vision username
+VISION_PASS = "radware" # APSolute Vision password
+
+# Log set up parameters
+LOG_FILE_PATH = "./log/" # folder to save the script logging events
+LOG_ROTATION_SIZE = 20000000 # Maximum rotation log file size in Bytes after which it will be split to another file
+LOG_ROTATION_HISTORY = 10 # Maximum amount of files to keep
+SYSLOG_SERVER = "1.1.1.2" # Syslog server destination IP
+SYSLOG_PORT = 514 # Syslog server destination UDP port
+
+# Email set up parameters for sending email with reports
+SMTP_SERVER = "smtp.gmail.com" # SMTP server name
+SMTP_SERVER_PORT = 587 # SMTP server port
+SMTP_SENDER = 'sender@gmail.com' # Email sender address setting
+SMTP_PASSWORD = 'radware' # Email password (optional)
+SMTP_LIST = ['recepient@radware.com'] # Email address/address list recepient/s(comma separated)
+SMTP_SUBJECT_PREFIX = "ALARM:DP - " # Email Subject
+SMTP_MSG_BODY = "This email was automated by the DefensePro monitoring script" # Email message body
