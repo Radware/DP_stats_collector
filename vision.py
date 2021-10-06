@@ -20,9 +20,6 @@ class Vision:
 		self.sess.headers.update({"Content-Type": "application/json"})
 		self.login()
 		self.device_list = self.getDeviceList()
-		# self.last_24_hours = self.epochTimeGenerator(1)
-		# self.last_week = self.epochTimeGenerator(7)
-
 		self.report_duration = self.epochTimeGenerator(cfg.DURATION)
 
 		with open(requests_path + 'BDOStrafficRequest.json') as outfile:

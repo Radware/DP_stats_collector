@@ -27,12 +27,10 @@ def send_report(report_list):
 
 		if report == 'test':
 			#Send this test email if "--test-alarm" argument is set
-			logging.info('sending test email alarm')
 			msg["Subject"] = cfg.SMTP_SUBJECT_PREFIX + "DefensePro test alert report  - " + date.today().strftime("%B %d, %Y")
 			body = "This email is a test email alert"
 
 		else:
-			logging.info(f'sending {report} by email')
 			dir, filename = os.path.split(report)
 			attachment = open(report, "rb")
 			p = MIMEBase('application', 'octet-stream')

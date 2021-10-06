@@ -176,17 +176,26 @@ if getdatafromvision:
 	v = Vision(cfg.VISION_IP, cfg.VISION_USER, cfg.VISION_PASS)
 	
 	full_pol_dic = v.getFullPolicyDictionary()
+	logging_helper.logging.info('Collecting Full policies data')
 	full_net_dic = v.getFullNetClassDictionary()
-	
+	logging_helper.logging.info('Collecting Full Network Classes data')
+
 	getBDOSReportFromVision()
-	getTrafficUtilizationStatsFromVision()
+	logging_helper.logging.info('Collecting BDOS data')
 	getDNSReportFromVision()
+	logging_helper.logging.info('Collecting DNS data')
+	getTrafficUtilizationStatsFromVision()
+	logging_helper.logging.info('Collecting Traffic Utilization data')
+
 
 
 report.append(traffic_stats_parser.parse())
+logging_helper.logging.info('Parsing traffic/BDOS/DNS data')
+
 
 if test_email_alarm:
 	report = ['test']
 
 if alarm:
 	logging_helper.send_report(report)
+	logging_helper.logging.info('Sending email')
