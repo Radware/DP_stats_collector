@@ -3,12 +3,21 @@ import json
 from vision import Vision
 import traffic_stats_parser
 import urllib3
-
 import logging_helper
 import sys
+import os
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+if not os.path.exists('log'):
+	os.makedirs('log')
+
+if not os.path.exists('Raw Data'):
+	os.makedirs('Raw Data')
+
+if not os.path.exists('Reports'):
+	os.makedirs('Reports')
+	
 
 #Arguments variables
 getdatafromvision = True
