@@ -41,7 +41,6 @@ def parseTrafficStatsBPS():
 
 				if len(currthroughput_list) and sum(currthroughput_list) !=0: # if current throughput list per stamplist is not empty, calculate average throughput
 					# currthroughput_avg = (sum(currthroughput_list)) / (len(currthroughput_list))
-
 					top_currthroughput_idx = sorted(range(len(currthroughput_list)), key=lambda i: currthroughput_list[i])[-10:]
 					top_currthroughput_list = [currthroughput_list[i] for i in top_currthroughput_idx]
 				
@@ -52,6 +51,12 @@ def parseTrafficStatsBPS():
 					with open(reports_path + 'traffic_stats_temp1.csv', mode='a', newline="") as traffic_stats:
 						traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 						traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'All Combined', f'{top_currthroughput_avg / 1000}', f'N/A', f'N/A', f'N/A',f'N/A'])
+
+				if sum(currthroughput_list) == 0:
+
+					with open(reports_path + 'traffic_stats_temp1.csv', mode='a', newline="") as traffic_stats:
+						traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+						traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'All Combined', f'0', f'N/A', f'N/A', f'N/A',f'N/A'])
 
 
 def parseTrafficStatsPPS():
@@ -78,13 +83,15 @@ def parseTrafficStatsPPS():
 
 					currthroughput_list.append(trafficvalue)
 
-				if len(currthroughput_list) and sum(currthroughput_list) !=0: # if current throughput list per stamplist is not empty, calculate average throughput
-					# currthroughput_avg = (sum(currthroughput_list)) / (len(currthroughput_list))
-					top_currthroughput_idx = sorted(range(len(currthroughput_list)), key=lambda i: currthroughput_list[i])[-10:]
-					top_currthroughput_list = [currthroughput_list[i] for i in top_currthroughput_idx]
-				
-					top_currthroughput_avg = (sum(top_currthroughput_list)) / (len(top_currthroughput_list))
 
+
+				if len(currthroughput_list):
+					if sum(currthroughput_list) !=0: # if current throughput list per stamplist is not empty, calculate average throughput
+						# currthroughput_avg = (sum(currthroughput_list)) / (len(currthroughput_list))
+						top_currthroughput_idx = sorted(range(len(currthroughput_list)), key=lambda i: currthroughput_list[i])[-10:]
+						top_currthroughput_list = [currthroughput_list[i] for i in top_currthroughput_idx]
+					
+						top_currthroughput_avg = (sum(top_currthroughput_list)) / (len(top_currthroughput_list))
 
 					# Traffic Utilization Stats collection - max traffic average per policy
 
@@ -99,11 +106,12 @@ def parseTrafficStatsPPS():
 						for row in csv_reader:
 							# Append the default text in the row / list
 							if row[0] == dp_ip and row[2] == policy:
-							
-								row[6] = top_currthroughput_avg
+								if sum(currthroughput_list) !=0:
+									row[6] = top_currthroughput_avg
+								if sum(currthroughput_list) ==0:
+									row[6] = "0"
 							# # Add the updated row / list to the output file
 								csv_writer.writerow(row)
-
 
 def parseTrafficStatsCPS():
 	#Fetches traffic utilization statistics (CPS)
@@ -126,12 +134,13 @@ def parseTrafficStatsCPS():
 
 					currcps_list.append(connectionpersecond)
 
-				if len(currcps_list) and sum(currcps_list) !=0: # if current throughput list per stamplist is not empty, calculate average throughput
-					# currthroughput_avg = (sum(currthroughput_list)) / (len(currthroughput_list))
-					top_currcps_idx = sorted(range(len(currcps_list)), key=lambda i: currcps_list[i])[-10:]
-					top_currcps_list = [currcps_list[i] for i in top_currcps_idx]
-				
-					top_currcps_avg = (sum(top_currcps_list)) / (len(top_currcps_list))
+				if len(currcps_list): # if current throughput list per stamplist is not empty, calculate average throughput
+					if sum(currcps_list) !=0:
+						# currthroughput_avg = (sum(currthroughput_list)) / (len(currthroughput_list))
+						top_currcps_idx = sorted(range(len(currcps_list)), key=lambda i: currcps_list[i])[-10:]
+						top_currcps_list = [currcps_list[i] for i in top_currcps_idx]
+					
+						top_currcps_avg = (sum(top_currcps_list)) / (len(top_currcps_list))
 
 
 					# Traffic Utilization Stats collection - max traffic average per policy
@@ -147,10 +156,15 @@ def parseTrafficStatsCPS():
 						for row in csv_reader:
 							# Append the default text in the row / list
 							if row[0] == dp_ip and row[2] == policy:
-							
-								row[7] = top_currcps_avg
+								
+								if sum(currcps_list) !=0:
+									row[7] = top_currcps_avg
+								
+								if sum(currcps_list) ==0:
+									row[7] = "0"
 							# # Add the updated row / list to the output file
 								csv_writer.writerow(row)
+
 
 def parseTrafficStatsCEC():
 	#Fetches traffic utilization statistics (CEC - Concurrent established Connections)
@@ -237,6 +251,12 @@ def parseBDOSStats():
 							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'{top10_currthroughput_avg / 1000}', f'{float(normal_baseline) /1000}' , 'N/A','N/A','N/A'])
 
 
+					if sum(currthroughput_list) ==0: 	
+						with open(reports_path + 'traffic_stats.csv', mode='a', newline="") as traffic_stats:
+							traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'0', f'{float(normal_baseline) /1000}' , 'N/A','N/A','N/A'])
+
+
 def parseDNSStats():
 	with open(raw_data_path + 'DNS_traffic_report.json') as json_file:
 		dns_dict = json.load(json_file)
@@ -280,6 +300,12 @@ def parseDNSStats():
 						with open(reports_path + 'traffic_stats.csv', mode='a', newline="") as traffic_stats:
 							traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'{top10_currthroughput_avg}', f'{float(normal_baseline)}' , 'N/A','N/A','N/A'])
+
+
+					if sum(currthroughput_list) ==0: 
+						with open(reports_path + 'traffic_stats.csv', mode='a', newline="") as traffic_stats:
+							traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'0', f'{float(normal_baseline)}' , 'N/A','N/A','N/A'])
 
 
 def parse():

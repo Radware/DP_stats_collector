@@ -106,7 +106,7 @@ class Vision:
 		self.BDOSformatRequest['criteria'][5]['lower'] = self.report_duration
 		self.BDOSformatRequest['criteria'][6]["filters"][0]['filters'][0]['value'] = pol_dp_ip
 		self.BDOSformatRequest['criteria'][6]["filters"][0]['filters'][1]["filters"][0]["value"] = pol_name 
-		self.BDOSformatRequest['criteria'][0]['value'] = 'true'
+		self.BDOSformatRequest['criteria'][0]['value'] = 'true' # default IPv4 true
 		
 		
 		ipv6 = False
@@ -125,7 +125,7 @@ class Vision:
 					net_name = netcl['rsBWMNetworkName']
 					net_addr = netcl['rsBWMNetworkAddress']
 					
-					if net_name == pol_src_net:
+					if net_name == pol_src_net and net_name != "any":
 						if ":" in net_addr:
 							ipv6 = True
 							#logging.info(f'dp ip is {net_dp_ip},policy {pol_name}, network {net_name} - src net is IPv6')  
@@ -136,7 +136,7 @@ class Vision:
 							#logging.info(f'dp ip is {net_dp_ip},policy {pol_name}, network {net_name} - src net is IPv4')  
 							self.BDOSformatRequest['criteria'][0]['value'] = 'true'			
 
-					if net_name == pol_dst_net:
+					if net_name == pol_dst_net and net_name != "any":
 						if ":" in net_addr:
 							ipv6 = True
 							#logging.info(f'dp ip is {net_dp_ip},policy {pol_name}, network {net_name} - dst net is IPv6')
@@ -202,7 +202,7 @@ class Vision:
 				#if unreachable do not perform other tests
 				continue
 
-			if net_dp_ip == pol_dp_ip:
+			if net_dp_ip == pol_dp_ip and net_name != "any":
 
 				for netcl in dp_attr['rsBWMNetworkTable']: #for each netclass element
 					net_name = netcl['rsBWMNetworkName']
@@ -215,7 +215,7 @@ class Vision:
 						if "." in net_addr:
 							ipv4 = True		
 
-					if net_name == pol_dst_net:
+					if net_name == pol_dst_net and net_name != "any":
 						if ":" in net_addr:
 							ipv6 = True
 							
