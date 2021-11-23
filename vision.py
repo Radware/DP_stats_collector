@@ -202,13 +202,13 @@ class Vision:
 				#if unreachable do not perform other tests
 				continue
 
-			if net_dp_ip == pol_dp_ip and net_name != "any":
+			if net_dp_ip == pol_dp_ip:
 
 				for netcl in dp_attr['rsBWMNetworkTable']: #for each netclass element
 					net_name = netcl['rsBWMNetworkName']
 					net_addr = netcl['rsBWMNetworkAddress']
 					
-					if net_name == pol_src_net:
+					if net_name == pol_src_net and net_name != "any":
 						if ":" in net_addr:
 							ipv6 = True
 		
