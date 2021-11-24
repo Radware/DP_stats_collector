@@ -270,10 +270,9 @@ def parseDNSStats():
 
 				for stampslist in pol_attr: #stampslist = list of 72 checkpoints for the particular protection (udp, tcp-syn etc.) [{'row': {'deviceIp': '10.107.129.206', 'normal': '161.0', 'fullExcluded': '-1.0', 'policyName': 'NIX-NC-EB-dns', 'enrichmentContainer': '{}', 'protection': 'tcp-frag', 'isTcp': 'false', 'isIpv4': 'true', 'units': 'bps', 'timeStamp': '1620141600000', 'fast': '0.0', 'id': None, 'partial': '0.0', 'direction': 'In', 'full': '0.0'}}, {'row': ....
 					currthroughput_list = []
-
 					for stamp in stampslist: # every row {'row': {'deviceIp': '10.107.129.205', 'normal': '645.0', 'fullExcluded': '0.0', 'policyName': 'test_1', 'enrichmentContainer': '{}', 'protection': 'tcp-rst', 'isTcp': 'false', 'isIpv4': 'true', 'units': 'bps', 'timeStamp': '1620152400000', 'fast': '0.0', 'id': None, 'partial': '0.0', 'direction': 'In', 'full': '0.0'}}
 						row = stamp['row']
-
+	
 						if row['normal'] is None:
 							continue
 
@@ -302,10 +301,13 @@ def parseDNSStats():
 							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'{top10_currthroughput_avg}', f'{float(normal_baseline)}' , 'N/A','N/A','N/A'])
 
 
-					if sum(currthroughput_list) ==0: 
+					if len(currthroughput_list) and sum(currthroughput_list) ==0: 
 						with open(reports_path + 'traffic_stats.csv', mode='a', newline="") as traffic_stats:
 							traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'0', f'{float(normal_baseline)}' , 'N/A','N/A','N/A'])
+
+					if not len(currthroughput_list):
+						print(f'{dp_name},{policy}')
 
 
 def parse():
