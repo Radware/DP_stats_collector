@@ -251,11 +251,13 @@ def parseBDOSStats():
 							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'{top10_currthroughput_avg / 1000}', f'{float(normal_baseline) /1000}' , 'N/A','N/A','N/A'])
 
 
-					if sum(currthroughput_list) ==0: 	
+					if len(currthroughput_list) and sum(currthroughput_list) ==0: 	
 						with open(reports_path + 'traffic_stats.csv', mode='a', newline="") as traffic_stats:
 							traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'0', f'{float(normal_baseline) /1000}' , 'N/A','N/A','N/A'])
 
+					if not len(currthroughput_list):
+						print(f'{dp_name},{policy}, empty bdos stats')
 
 def parseDNSStats():
 	with open(raw_data_path + 'DNS_traffic_report.json') as json_file:
@@ -307,7 +309,7 @@ def parseDNSStats():
 							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'0', f'{float(normal_baseline)}' , 'N/A','N/A','N/A'])
 
 					if not len(currthroughput_list):
-						print(f'{dp_name},{policy}')
+						print(f'{dp_name},{policy}, empty dns stats')
 
 
 def parse():
