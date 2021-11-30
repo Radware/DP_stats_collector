@@ -158,10 +158,15 @@ class Vision:
 				r = self.sess.post(url = url, json = self.BDOSformatRequest , verify=False)
 				jsonData = json.loads(r.text)
 				
+				if jsonData['data'] == ([]): #Empty response
+					# print(f'{pol_dp_ip},{pol_name},{protocol},{jsonData}')
+					empty_resp = [{'row': {'response': 'empty', 'protection': protocol}}]
+					# print(f'Printing empty resp ipv6 - {empty_resp}')
+					bdosReportList.append(empty_resp)
 
-				#print(f'{pol_dp_ip}, policy {pol_name} - executing IPv6 query')
-
-				bdosReportList.append(jsonData['data'])
+					# print(f'{pol_dp_ip}, policy {pol_name} - executing IPv6 query')
+				else:
+					bdosReportList.append(jsonData['data'])
 
 			if ipv4:
 			
@@ -169,9 +174,18 @@ class Vision:
 				r = self.sess.post(url = url, json = self.BDOSformatRequest , verify=False)
 				jsonData = json.loads(r.text)
 				
-				#print(f'{pol_dp_ip}, policy {pol_name} - executing IPv4 query')
 				
-				bdosReportList.append(jsonData['data'])
+
+				if jsonData['data'] == ([]): #Empty response
+					# print(f'{pol_dp_ip},{pol_name},{protocol},{jsonData}')
+					empty_resp = [{'row': {'response': 'empty', 'protection': protocol}}]
+					# print(f'Printing empty resp ipv6 - {empty_resp}')
+					bdosReportList.append(empty_resp)
+
+				# print(f'{pol_dp_ip},{pol_name},{protocol},{jsonData}')
+					# print(f'{pol_dp_ip}, policy {pol_name} - executing IPv4 query')
+				else:
+					bdosReportList.append(jsonData['data'])
 
 		bdosTrafficReport = {pol_name:bdosReportList}
 		

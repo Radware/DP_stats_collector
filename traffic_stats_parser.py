@@ -216,14 +216,30 @@ def parseBDOSStats():
 
 				for stampslist in pol_attr: #stampslist = list of 72 checkpoints for the particular protection (udp, tcp-syn etc.) [{'row': {'deviceIp': '10.107.129.206', 'normal': '161.0', 'fullExcluded': '-1.0', 'policyName': 'NIX-NC-EB-dns', 'enrichmentContainer': '{}', 'protection': 'tcp-frag', 'isTcp': 'false', 'isIpv4': 'true', 'units': 'bps', 'timeStamp': '1620141600000', 'fast': '0.0', 'id': None, 'partial': '0.0', 'direction': 'In', 'full': '0.0'}}, {'row': ....
 					currthroughput_list = []
+					empty_resp = False
+
 
 					for stamp in stampslist: # every row {'row': {'deviceIp': '10.107.129.205', 'normal': '645.0', 'fullExcluded': '0.0', 'policyName': 'test_1', 'enrichmentContainer': '{}', 'protection': 'tcp-rst', 'isTcp': 'false', 'isIpv4': 'true', 'units': 'bps', 'timeStamp': '1620152400000', 'fast': '0.0', 'id': None, 'partial': '0.0', 'direction': 'In', 'full': '0.0'}}
-						row = stamp['row']
+						row = stamp['row']									
+						
+						if 'response' in row:
+							if row['response'] == 'empty':
+								# print(f'{dp_ip},{dp_name},{policy},' , row['protection'] ,' - no BDOS stats ---')
+								empty_resp = True
+								with open(reports_path + 'traffic_stats.csv', mode='a', newline="") as traffic_stats:
+									traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+									traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', row['protection'] , f'No BDOS stats', f'No BDOS stats' , 'N/A','N/A','N/A'])
+
+								continue
 
 						if row['normal'] is None:
+							normal_baseline = row['normal']
+							protoc = row['protection']
 							continue
 
 						if row['full'] is None:
+							normal_baseline = row['normal']
+							protoc = row['protection']
 							continue
 
 						normal_baseline = row['normal']
@@ -231,10 +247,8 @@ def parseBDOSStats():
 						currthroughput = float(row['full'])
 
 
-
-
 						currthroughput_list.append(currthroughput)
-
+				
 
 					if len(currthroughput_list) and sum(currthroughput_list) !=0: # if current throughput list per stamplist is not empty, calculate average throughput
 						# currthroughput_avg = (sum(currthroughput_list)) / (len(currthroughput_list))
@@ -250,14 +264,17 @@ def parseBDOSStats():
 							traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'{top10_currthroughput_avg / 1000}', f'{float(normal_baseline) /1000}' , 'N/A','N/A','N/A'])
 
-
-					if len(currthroughput_list) and sum(currthroughput_list) ==0: 	
+					if len(currthroughput_list) and sum(currthroughput_list) ==0:
 						with open(reports_path + 'traffic_stats.csv', mode='a', newline="") as traffic_stats:
 							traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 							traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', f'{protoc}' , f'0', f'{float(normal_baseline) /1000}' , 'N/A','N/A','N/A'])
 
-					if not len(currthroughput_list):
-						print(f'{dp_name},{policy}, empty bdos stats')
+
+
+					if len(currthroughput_list) == 0 and not empty_resp:
+							with open(reports_path + 'traffic_stats.csv', mode='a', newline="") as traffic_stats:
+								traffic_stats = csv.writer(traffic_stats, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+								traffic_stats.writerow([f'{dp_ip}' , f'{dp_name}', f'{policy}', row['protection'] , f'BDOS stats returned None', f'Normal BDOS baseline returned None' , 'N/A','N/A','N/A'])
 
 def parseDNSStats():
 	with open(raw_data_path + 'DNS_traffic_report.json') as json_file:
