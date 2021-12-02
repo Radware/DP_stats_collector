@@ -129,23 +129,23 @@ class Vision:
 						if ":" in net_addr:
 							ipv6 = True
 							#logging.info(f'dp ip is {net_dp_ip},policy {pol_name}, network {net_name} - src net is IPv6')  
-							self.BDOSformatRequest['criteria'][0]['value'] = 'false'
+							# self.BDOSformatRequest['criteria'][0]['value'] = 'false'
 							
 						if "." in net_addr:
 							ipv4 = True
 							#logging.info(f'dp ip is {net_dp_ip},policy {pol_name}, network {net_name} - src net is IPv4')  
-							self.BDOSformatRequest['criteria'][0]['value'] = 'true'			
+							# self.BDOSformatRequest['criteria'][0]['value'] = 'true'			
 
 					if net_name == pol_dst_net and net_name != "any":
 						if ":" in net_addr:
 							ipv6 = True
 							#logging.info(f'dp ip is {net_dp_ip},policy {pol_name}, network {net_name} - dst net is IPv6')
-							self.BDOSformatRequest['criteria'][0]['value'] = 'false'
+							# self.BDOSformatRequest['criteria'][0]['value'] = 'false'
 							
 						if "." in net_addr:
 							ipv4 = True
 							#logging.info(f'dp ip is {net_dp_ip},policy {pol_name}, network {net_name} - dst net is IPv4')  
-							self.BDOSformatRequest['criteria'][0]['value'] = 'true'								
+							# self.BDOSformatRequest['criteria'][0]['value'] = 'true'								
 						
 
 				
@@ -246,9 +246,18 @@ class Vision:
 				r = self.sess.post(url = url, json = self.DNSformatRequest , verify=False)
 				jsonData = json.loads(r.text)
 				
-				# print(f'{pol_dp_ip}, policy {pol_name} - executing DNS IPv6 query')
 
-				dnsReportList.append(jsonData['data'])
+				if jsonData['data'] == ([]): #Empty response
+					# print(f'{pol_dp_ip},{pol_name},{protocol},{jsonData}')
+					empty_resp = [{'row': {'response': 'empty', 'protection': protocol}}]
+					# print(f'Printing empty resp ipv6 - {empty_resp}')
+					dnsReportList.append(empty_resp)
+
+					# print(f'{pol_dp_ip}, policy {pol_name} - executing IPv6 query')
+				else:
+					dnsReportList.append(jsonData['data'])
+
+
 
 			if ipv4:
 
@@ -259,11 +268,16 @@ class Vision:
 				
 				# print(f'{pol_dp_ip}, policy {pol_name} - executing DNS IPv4 query')
 				
-				dnsReportList.append(jsonData['data'])				
+				if jsonData['data'] == ([]): #Empty response
+					# print(f'{pol_dp_ip},{pol_name},{protocol},{jsonData}')
+					empty_resp = [{'row': {'response': 'empty', 'protection': protocol}}]
+					# print(f'Printing empty resp ipv6 - {empty_resp}')
+					dnsReportList.append(empty_resp)
 
-			r = self.sess.post(url = url, json = self.DNSformatRequest , verify=False)
-			jsonData = json.loads(r.text)
-			dnsReportList.append(jsonData['data'])
+				# print(f'{pol_dp_ip},{pol_name},{protocol},{jsonData}')
+					# print(f'{pol_dp_ip}, policy {pol_name} - executing IPv4 query')
+				else:
+					dnsReportList.append(jsonData['data'])
 
 		dnsTrafficReport = {pol_name:dnsReportList}
 		
