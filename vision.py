@@ -21,6 +21,7 @@ class Vision:
 		self.login()
 		self.device_list = self.getDeviceList()
 		self.report_duration = self.epochTimeGenerator(cfg.DURATION)
+		self.time_now = int(time.time())*1000
 
 		with open(requests_path + 'BDOStrafficRequest.json') as outfile:
 			self.BDOSformatRequest = json.load(outfile)
@@ -102,7 +103,8 @@ class Vision:
 
 		url = f'https://{self.ip}/mgmt/monitor/reporter/reports-ext/BDOS_BASELINE_RATE_REPORTS'
 		BDOS_portocols = ['udp','tcp-syn','tcp-syn-ack','tcp-rst','tcp-ack-fin','tcp-frag','udp-frag','icmp','igmp']
-		
+
+		self.BDOSformatRequest['criteria'][5]['upper'] = self.time_now
 		self.BDOSformatRequest['criteria'][5]['lower'] = self.report_duration
 		self.BDOSformatRequest['criteria'][6]["filters"][0]['filters'][0]['value'] = pol_dp_ip
 		self.BDOSformatRequest['criteria'][6]["filters"][0]['filters'][1]["filters"][0]["value"] = pol_name 
@@ -201,7 +203,8 @@ class Vision:
 
 		url = f'https://{self.ip}/mgmt/monitor/reporter/reports-ext/DNS_BASELINE_RATE_REPORTS'  
 		DNS_protocols = ['dns-a','dns-aaaa',"dns-mx","dns-text","dns-soa","dns-srv","dns-ptr","dns-naptr","dns-other"]
-		
+
+		self.DNSformatRequest['criteria'][5]['upper'] = self.time_now
 		self.DNSformatRequest['criteria'][5]['lower'] = self.report_duration
 		self.DNSformatRequest['criteria'][6]["filters"][0]['filters'][0]['value'] = pol_dp_ip
 		self.DNSformatRequest['criteria'][6]["filters"][0]['filters'][1]["filters"][0]["value"] = pol_name 

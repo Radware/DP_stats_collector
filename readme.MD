@@ -1,20 +1,4 @@
-
-
-
 # DefensePro – traffic stats collector
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # ChangeLog
 
@@ -70,19 +54,21 @@ V2.1
 -	Do not attempt collecting BDOS and DNS stats if policy state is disabled
 -	Added check if BDOS stats are None or Empty
 -	Added check if DNS stats are None or Empty
+-	Config.py/logging_helper.py - added SMTP_AUTH True/False variable
 
+V2.2
+
+-	Jan 19, 2022 Bug fix with BDOS and DNS query - changed "upper" to be an epoch value
 
 # Functionality to be added:
 
 
 - Script progress logging
-- Add excluded traffic detection (similar to CEC)
-
+- Add excluded/discarded traffic detection (per DP, not per Policy, similar to CEC)
 
 
 # Overview 
 
-The solution was developed through collaborated effort of the Radware team, initiated by Lior Rozen and the team - Marcelo Dantas, Daniel Offek, Egor Egorov, Sagiv Oron, Artur Mehitrian in 2021.
 The script purpose is to provide a report which includes DefensePro highest peak average traffic statistics for every policy CPS/PPS/BPS/CEC/BDOS/DNS (.\Reports\traffic_stats.csv folder).
 
 The script interacts with Radware APSolute Vision DefensePro and collects all the necessary data through REST API calls.
@@ -123,8 +109,9 @@ datetime
 os
 sys
 
-## Packages in use – requires installation
+## Packages in use – may require installation
 urllib3
+requests
 
 Use the following command in order to install urllib3
 
@@ -173,13 +160,14 @@ SYSLOG_SERVER = "1.1.1.2" # Syslog server destination IP for sending events thro
 SYSLOG_PORT = 514 # Syslog server destination UDP port
 
 # Email set up parameters for sending email with reports
+SMTP_AUTH = True # If set to True, SMTP server requires authentication with password
 SMTP_SERVER = "smtp.gmail.com" # SMTP server name
 SMTP_SERVER_PORT = 587 # SMTP server port
 SMTP_SENDER = 'sender@gmail.com' # Email sender address setting
 SMTP_PASSWORD = ‘radware’ # Email password (optional)
 SMTP_LIST = ['recepient@radware.com'] # Email address/address list recepient/s(comma separated)
-SMTP_SUBJECT_PREFIX = "ALARM:DP - " # Email Subject
-SMTP_MSG_BODY = "This email was automated by the DefensePro monitoring script" # Email message body
+SMTP_SUBJECT_PREFIX = "ALARM:DP traffic stats - " # Email Subject
+SMTP_MSG_BODY = "This email was automated by the DefensePro traffic stats collector script" # Email message body
 
 “config.py example” is attached for the reference. In order to run the script, rename “config.py example” to “config.py” in order to run the script.
 
