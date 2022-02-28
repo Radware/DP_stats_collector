@@ -60,6 +60,10 @@ V2.2
 
 -	Jan 19, 2022 Bug fix with BDOS and DNS query - changed "upper" to be an epoch value
 
+V2.3
+
+-	Feb 28, 2022 Added different API call for Vision 4.83
+
 # Functionality to be added:
 
 

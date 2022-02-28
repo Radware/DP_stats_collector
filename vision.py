@@ -22,6 +22,7 @@ class Vision:
 		self.device_list = self.getDeviceList()
 		self.report_duration = self.epochTimeGenerator(cfg.DURATION)
 		self.time_now = int(time.time())*1000
+		self.vision_ver = cfg.VISION_VER
 
 		with open(requests_path + 'BDOStrafficRequest.json') as outfile:
 			self.BDOSformatRequest = json.load(outfile)
@@ -101,7 +102,11 @@ class Vision:
 		pol_src_net = pol_attr["rsIDSNewRulesSource"]
 		pol_dst_net = pol_attr["rsIDSNewRulesDestination"]
 
-		url = f'https://{self.ip}/mgmt/monitor/reporter/reports-ext/BDOS_BASELINE_RATE_REPORTS'
+		if self.vision_ver < 4.83:
+			url = f'https://{self.ip}/mgmt/monitor/reporter/reports-ext/BDOS_BASELINE_RATE_REPORTS' #pre 4.83 Vision
+		else:
+			url = f'https://{self.ip}/mgmt/monitor/reporter/reports-ext/BDOS_BASELINE_RATE_HOURLY_REPORTS' #4.83 Vision
+
 		BDOS_portocols = ['udp','tcp-syn','tcp-syn-ack','tcp-rst','tcp-ack-fin','tcp-frag','udp-frag','icmp','igmp']
 
 		self.BDOSformatRequest['criteria'][5]['upper'] = self.time_now
@@ -201,7 +206,8 @@ class Vision:
 		pol_src_net = pol_attr["rsIDSNewRulesSource"]
 		pol_dst_net = pol_attr["rsIDSNewRulesDestination"]
 
-		url = f'https://{self.ip}/mgmt/monitor/reporter/reports-ext/DNS_BASELINE_RATE_REPORTS'  
+		url = f'https://{self.ip}/mgmt/monitor/reporter/reports-ext/DNS_BASELINE_RATE_REPORTS'
+		
 		DNS_protocols = ['dns-a','dns-aaaa',"dns-mx","dns-text","dns-soa","dns-srv","dns-ptr","dns-naptr","dns-other"]
 
 		self.DNSformatRequest['criteria'][5]['upper'] = self.time_now

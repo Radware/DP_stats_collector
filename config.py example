@@ -3,6 +3,7 @@ DURATION = 6 # sets the time frame in days for the data collection period
 VISION_IP = "1.1.1.1" # APSolute Vision IP
 VISION_USER = "radware" # APSolute Vision username
 VISION_PASS = "radware" # APSolute Vision password
+VISION_VER = 4.83
 
 # Log set up parameters
 LOG_FILE_PATH = "./log/" # folder to save the script logging events
