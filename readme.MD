@@ -62,14 +62,19 @@ V2.2
 
 V2.3
 
--	Feb 28, 2022 Added different API call for BDOS for Vision 4.83
+-	Feb 28, 2022 Added different API call for BDOS for Vision 4.83 and higher
+
+V2.4
+
+- May 17 added enhanced logging when no response is seen from the DP
 
 # Functionality to be added:
 
 
 - Script progress logging
 - Add excluded/discarded traffic detection (per DP, not per Policy, similar to CEC)
-
+- Check clean vs blocked
+- Check if traffic is exceeding the license
 
 # Overview 
 

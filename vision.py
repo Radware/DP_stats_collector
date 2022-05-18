@@ -50,7 +50,7 @@ class Vision:
 			self.sess.headers.update({"JSESSIONID": response['jsessionid']})
 			# print("Auth Cookie is:  " + response['jsessionid'])
 		else:
-			logging.info('Login error: ' + response['message'])
+			logging.info('Vision Login error: ' + response['message'])
 			exit(1)
 
 	def getDeviceList(self):
@@ -77,7 +77,7 @@ class Vision:
 		net_list = r.json()
 		
 		if net_list.get("status") == "error":
-			logging.info("Error: " + net_list['message'])
+			logging.info("Network class get error. DefensePro IP: " + dp_ip + ". Error message: " + net_list['message'])
 			return []
 		return net_list
 
@@ -90,7 +90,7 @@ class Vision:
 		policy_list = r.json()
 
 		if policy_list.get("status") == "error":
-			logging.info("Error: " + policy_list['message'])
+			logging.info("Policy list get error. DefensePro IP: " + dp_ip + ". Error message: " + policy_list['message'])
 			return []
 
 		return policy_list
